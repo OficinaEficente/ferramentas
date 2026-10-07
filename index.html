@@ -40,7 +40,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <style>
   :root{
@@ -343,16 +342,7 @@
       </li>
     </ul>
     <div class="form-card">
-      <div class="field">
-        <label for="nome">Nome</label>
-        <input type="text" id="nome" placeholder="Seu nome" autocomplete="name">
-      </div>
-      <div class="field">
-        <label for="whatsapp">WhatsApp</label>
-        <input type="tel" id="whatsapp" placeholder="(00) 00000-0000" autocomplete="tel">
-      </div>
-      <button class="cta-btn" id="submit-btn">Ir para o pagamento</button>
-      <div class="form-note">Você será direcionado ao pagamento pra finalizar o pedido.</div>
+      <script src="https://atendeia.riodelaplatamkt.com.br/atendeia-form.js?v=20260925-4" data-form-key="04ebb3cca2dfebb836e85c414920f224ed41d41fa4ce4188" async></script>
     </div>
   </section>
 
@@ -366,64 +356,6 @@
 <div class="sticky-cta"><a class="cta-btn" href="#cadastro">Quero o kit de ferramentas!</a></div>
 
 <script>
-/* =========================================================================
-   CONFIGURAÇÃO — cole aqui a MESMA URL e chave publishable já usadas no quiz
-   ========================================================================= */
-const SUPABASE_URL = "https://acdskpcmcglfwhablhxg.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_mtVruW8I6oJ-TJHnKRbDOA_VDiNovR0";
-
-/* Tabela nova no Supabase (rode no SQL editor):
-
-  create table leads_kit_ferramentas (
-    id uuid primary key default gen_random_uuid(),
-    created_at timestamptz default now(),
-    nome text,
-    whatsapp text
-  );
-
-  alter table leads_kit_ferramentas enable row level security;
-
-  create policy "Permitir insercao publica kit"
-    on leads_kit_ferramentas for insert
-    to anon
-    with check (true);
-
-*/
-
-let supabaseClient = null;
-try {
-  if (SUPABASE_URL.startsWith("http") && window.supabase) {
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }
-} catch (e) { console.warn("Supabase não inicializado:", e); }
-
-const WHATSAPP_NUMBER = "5511964078463";
-const LIA_CHECKOUT_URL = "https://pague.lia.com.br/oficina-eficiente/oferta?offer_id=7e751dc5-c201-4a49-a1d5-ddb89cb6dc75";
-
-const btn = document.getElementById('submit-btn');
-btn.onclick = async () => {
-  const nome = document.getElementById('nome').value.trim();
-  const whatsapp = document.getElementById('whatsapp').value.trim();
-  if (!nome || !whatsapp){
-    btn.textContent = "Preencha nome e WhatsApp";
-    setTimeout(()=>{ btn.textContent = "Ir para o pagamento"; }, 1800);
-    return;
-  }
-  btn.disabled = true;
-  btn.textContent = "Enviando...";
-
-  if (supabaseClient){
-    try {
-      const { error } = await supabaseClient.from('leads_kit_ferramentas').insert([{ nome, whatsapp }]);
-      if (error) console.error('Erro ao salvar lead:', error);
-    } catch(e){ console.error('Falha ao conectar no Supabase:', e); }
-  } else {
-    console.warn('Supabase não configurado — lead não foi salvo:', { nome, whatsapp });
-  }
-
-  window.location.href = LIA_CHECKOUT_URL;
-};
-
 const tutorialVideo = document.getElementById('tutorial-video');
 tutorialVideo.onclick = () => {
   tutorialVideo.innerHTML = `<iframe src="https://www.youtube.com/embed/5IzgdOgD17k?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
